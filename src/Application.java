@@ -5,13 +5,14 @@ public class Application {
 	public static void main(String[] args) {
 		Applicant applicant = new Applicant();
 //Set your applicant's information
-		applicant.setFirstName("Joey");
-		applicant.setLastName("TestCase");
+		applicant.setFirstName("Jasmine");
+		applicant.setLastName("Soriano");
 		applicant.setDob("06/24/1988");
 		applicant.setCreditScore(700);
 		applicant.setThreeMonthsIncome(12000);
 		applicant.setPreviousYearTaxableIncome(46000);
 		applicant.setLoanAmountRequested(200000);
+		applicant.setLoanTermRequestedInMonths(120);
 
 //Generate Loan Decision
 		System.out.println("For Loan Application Number " + generateLoanId(applicant)
@@ -29,7 +30,7 @@ public class Application {
 		IndexGen x = new IndexGen();
 		int count = IndexGen.index;
 		String index = String.format("%02d", count);
-		return index+randomLetter+firstLetterFirstName+randomThreeDigits;
+		return index + randomLetter + firstLetterFirstName + randomThreeDigits;
 	}
 
 //Determine credit eligibility
@@ -37,8 +38,11 @@ public class Application {
 		return (score > 600 ? "" : "Credit score below minimum");
 	}
 //Calculate debt-to-income ratio
-	public static String dti(int loanAmountRequested, int threeMonthsIncome) {
-		return (loanAmountRequested/(threeMonthsIncome/3))/100 <= 0.3 ? "" : "Debt-to-income ratio exceeds the maximum allowable.";
+	public static String dti(int loanAmt, int loanTermRequestedInMonths, int threeMonthsIncome) {
+		double monthlyIncome = threeMonthsIncome / 3;
+		double monthlyPayment = loanAmt / loanTermRequestedInMonths;
+		double dti = monthlyPayment / monthlyIncome;
+		return dti <= .3 ? "" : "Debt-to-income ratio exceeds the maximum allowable.";
 	}
 //Calculate loan to income criteria
 	public static String lti(int loanAmountRequested, int previousYearTaxableIncome) {
@@ -51,19 +55,17 @@ public class Application {
 //Deliver the loan decision to the console
 	public static void loanDecision(Applicant applicant) {
 		NumberFormat usd = NumberFormat.getCurrencyInstance();
-		int score = applicant.getCreditScore();
-		int income = applicant.getThreeMonthsIncome();
-		int lastYear = applicant.getPreviousYearTaxableIncome();
-		int loanAmt = applicant.getLoanAmountRequested();
-		if(credit(score) == "" && dti(loanAmt, income) == "" && lti(loanAmt, lastYear) == "" && minIncome(income) == "")
+		String credit = credit(applicant.getCreditScore());
+		String dti = dti(applicant.getLoanAmountRequested(), applicant.getLoanTermRequestedInMonths(), applicant.getThreeMonthsIncome());
+		String lti = lti(applicant.getLoanAmountRequested(), applicant.getPreviousYearTaxableIncome());
+		String minIncome = minIncome(applicant.getThreeMonthsIncome());
+		
+		if(credit == "" && dti == "" && lti == "" && minIncome == "")
 			{
-				System.out.println("Applicant is APPROVED for a loan of " + usd.format(loanAmt) + "!\r\nThis approval is valid for up to 90 calendar days from the application date.");
+				System.out.println("Applicant is APPROVED for a loan of " + usd.format(applicant.getLoanAmountRequested())
+				+ "!\r\nThis approval is valid for up to 90 calendar days from the approval date.");
 			} else {
 				System.out.println("Loan application declined. Reasons for declination:");
-				String credit = credit(score);
-				String dti = dti(loanAmt, income);
-				String lti = lti(loanAmt, lastYear);
-				String minIncome = minIncome(income);
 				if(credit != "") {
 					System.out.println(credit); 
 				}

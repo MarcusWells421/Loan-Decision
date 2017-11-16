@@ -7,6 +7,7 @@ public class Applicant {
 	protected int threeMonthsIncome;
 	protected int previousYearTaxableIncome;
 	protected int loanAmountRequested;
+	protected int loanTermRequestedInMonths;//Attribute added to calculate DTI. Assumes 0% interest loan.
 	
 	public Applicant() {}
 
@@ -15,7 +16,7 @@ public class Applicant {
 	}
 
 	public Applicant(String firstName, String lastName, String dob, int creditScore, int threeMonthsIncome,
-			int previousYearTaxableIncome, int loanAmountRequested) {
+			int previousYearTaxableIncome, int loanAmountRequested, int loanTermRequestedInMonths) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.dob = dob;
@@ -23,6 +24,7 @@ public class Applicant {
 		this.threeMonthsIncome = threeMonthsIncome;
 		this.previousYearTaxableIncome = previousYearTaxableIncome;
 		this.loanAmountRequested = loanAmountRequested;
+		this.loanTermRequestedInMonths = loanTermRequestedInMonths;
 	}
 
 	public String getFirstName() {
@@ -79,6 +81,14 @@ public class Applicant {
 
 	public void setLoanAmountRequested(int loanAmountRequested) {
 		this.loanAmountRequested = loanAmountRequested;
+	}
+
+	public int getLoanTermRequestedInMonths() {
+		return loanTermRequestedInMonths;
+	}
+
+	public void setLoanTermRequestedInMonths(int loanTermRequestedInMonths) {
+		this.loanTermRequestedInMonths = loanTermRequestedInMonths;
 	}
 	
 }
