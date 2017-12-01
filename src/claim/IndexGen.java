@@ -1,3 +1,4 @@
+package claim;
 
 public class IndexGen {
 	
